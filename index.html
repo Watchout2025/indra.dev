@@ -133,7 +133,7 @@
     .code-block.type-html { color: #10B981; }
     .code-block.type-css { color: #3B82F6; }
     .code-block.type-javascript { color: #F59E0B; }
-    .code-block.type-python { color: #8B5CF6; } /* Purple for Python */
+    .code-block.type-python { color: #8B5CF6; } 
 
     .code-header { position: absolute; top: 0; left: 0; right: 0; height: 36px; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #222; border-top-left-radius: 16px; border-top-right-radius: 16px; }
     .code-label { font-family: 'Inter', sans-serif; font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: 600; }
@@ -365,9 +365,6 @@
             <div class="custom-option" data-value="meta/llama-3.1-405b-instruct" data-name="Llama 3.1 405B">Llama 3.1 405B</div>
             <div class="custom-option" data-value="meta/llama-3.1-8b-instruct" data-name="Llama 3.1 8B">Llama 3.1 8B</div>
             
-            <div class="option-group-label">Mistral AI</div>
-            <div class="custom-option" data-value="mistral/mistral-large" data-name="Mistral Large">Mistral Large</div>
-            
             <div class="option-group-label">Google</div>
             <div class="custom-option" data-value="google/gemma-2-27b-it" data-name="Gemma 2 27B">Gemma 2 27B</div>
           </div>
@@ -575,7 +572,6 @@
       }
     }
 
-    // Updated processAIResponse to handle Python
     function processAIResponse(text, chatIdx) {
       const codeRegex = /```(html|css|javascript|js|python|py)\s*([\s\S]*?)\s*```/g;
       let lastIndex = 0;
@@ -688,5 +684,3 @@
   </script>
 </body>
 </html>
-
-update the file with this code the is the final code till now
