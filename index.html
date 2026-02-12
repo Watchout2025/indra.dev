@@ -21,75 +21,102 @@
       transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Sidebar Collapsed State */
-    body.sidebar-hidden #sidebar {
-      margin-left: -260px;
-    }
+    body.sidebar-hidden #sidebar { margin-left: -260px; }
     
-    .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    .sidebar-header { 
+      padding: 20px; 
+      border-bottom: 1px solid rgba(255,255,255,0.05); 
     }
 
     .new-chat-btn {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
       border: 1px solid rgba(255,255,255,0.1);
       color: #fff;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 12px 16px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 14px;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 10px;
-      transition: all 0.2s;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    .new-chat-btn:hover { background: rgba(255,255,255,0.1); }
+    .new-chat-btn:hover { 
+      background: rgba(255,255,255,0.1); 
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .new-chat-btn svg {
+      transition: transform 0.3s ease;
+    }
+    .new-chat-btn:hover svg {
+      transform: rotate(90deg);
+    }
 
-    #chat-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    /* History List: Matches header padding for perfect alignment */
+    #chat-list { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 16px 20px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
     }
 
     .chat-item {
-      padding: 12px;
-      border-radius: 8px;
+      width: 100%;
+      padding: 12px 16px; 
+      border-radius: 12px; 
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px; 
       color: #9CA3AF;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border: 1px solid transparent;
+      flex-shrink: 0;
     }
-    .chat-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
-    .chat-item.active { background: rgba(255,255,255,0.08); color: #fff; }
     
-    .delete-chat {
-      opacity: 0;
-      color: #EF4444;
-      font-size: 16px;
-      padding: 2px 6px;
+    .chat-item span:first-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
     }
-    .chat-item:hover .delete-chat { opacity: 1; }
+
+    .chat-item:hover { 
+      background: rgba(255,255,255,0.04); 
+      color: #fff; 
+      border-color: rgba(255,255,255,0.05);
+    }
+    .chat-item.active { 
+      background: rgba(255,255,255,0.08); 
+      color: #fff;
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .delete-chat { 
+      opacity: 0; 
+      color: #6B7280; 
+      margin-left: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .chat-item:hover .delete-chat { opacity: 0.6; }
+    .delete-chat:hover { 
+      opacity: 1 !important;
+      color: #FFFFFF; 
+    }
 
     /* Main Content */
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: radial-gradient(circle at 20% 20%, #0A0A0A 0%, #050505 40%, #000000 100%);
-      position: relative;
-      min-width: 0; 
-    }
+    main { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle at 20% 20%, #0A0A0A 0%, #050505 40%, #000000 100%); position: relative; min-width: 0; }
 
     header { 
       height: 64px; 
@@ -117,41 +144,47 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
-    }
-    .toggle-sidebar:hover {
-      background: rgba(255,255,255,0.05);
     }
 
     #chat { flex: 1; overflow-y: auto; padding: 40px 20px 140px 20px; display: flex; flex-direction: column; gap: 18px; max-width: 900px; width: 100%; margin: 0 auto; scroll-behavior: smooth; }
     
-    .message { max-width: 80%; padding: 16px 18px; border-radius: 16px; line-height: 1.7; font-size: 14px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; animation: fadeIn 0.3s ease; position: relative; }
-    .user { align-self: flex-end; background: #FFFFFF; color: #000000; box-shadow: 0 6px 20px rgba(255,255,255,0.15); border-bottom-right-radius: 4px; }
-    .ai { align-self: flex-start; background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(8px); border-bottom-left-radius: 4px; }
+    .message { max-width: 85%; padding: 16px 18px; border-radius: 16px; line-height: 1.7; font-size: 14px; animation: fadeIn 0.3s ease; position: relative; }
+    .user { align-self: flex-end; background: #FFFFFF; color: #000000; border-bottom-right-radius: 4px; white-space: pre-wrap; }
+    .ai { align-self: flex-start; background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(8px); border-bottom-left-radius: 4px; width: 100%; }
     
-    .message.code-block { max-width: 95%; width: 100%; background: #000000; border: 1px solid #333; font-family: 'Courier New', Courier, monospace; font-size: 13px; padding: 20px; padding-top: 40px; margin: 8px 0; }
-    .code-block.type-html { color: #10B981; }
-    .code-block.type-css { color: #3B82F6; }
-    .code-block.type-javascript { color: #F59E0B; }
-    .code-block.type-python { color: #8B5CF6; } 
+    .text-content { white-space: pre-wrap; margin-bottom: 12px; }
+    .text-content:last-child { margin-bottom: 0; }
+    .bold-text { font-weight: 700; color: #fff; }
 
-    .code-header { position: absolute; top: 0; left: 0; right: 0; height: 36px; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #222; border-top-left-radius: 16px; border-top-right-radius: 16px; }
-    .code-label { font-family: 'Inter', sans-serif; font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: 600; }
-    .copy-btn { background: transparent; border: 1px solid #444; color: #aaa; font-size: 10px; padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
-    .copy-btn:hover { background: #222; color: #fff; border-color: #666; }
-
-    .message b { font-weight: 700; }
-
-    /* Input Area & Custom Model Selector */
-    .input-area { position: absolute; bottom: 0; width: 100%; padding: 24px; background: linear-gradient(transparent, #050505 30%); display: flex; justify-content: center; }
-    .input-wrapper { width: 100%; max-width: 900px; display: flex; gap: 12px; align-items: flex-end; background: rgba(15,15,15,0.9); padding: 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(14px); }
-    
-    /* Model Dropdown Styles */
-    .model-selector-container {
-      position: relative;
-      min-width: 160px;
+    .code-block-container { 
+      width: 100%; 
+      background: #000000; 
+      border: 1px solid #333; 
+      border-radius: 12px;
+      margin: 12px 0; 
+      overflow: hidden;
     }
 
+    .code-header { 
+      height: 36px; 
+      background: #111; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 0 16px; 
+      border-bottom: 1px solid #222; 
+    }
+    .code-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: 600; }
+    .copy-btn { background: transparent; border: 1px solid #444; color: #aaa; font-size: 10px; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+    .copy-btn:hover { background: #222; color: #fff; }
+    
+    .code-content { padding: 16px; font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #E5E7EB; overflow-x: auto; white-space: pre; }
+
+    /* Input Area */
+    .input-area { position: absolute; bottom: 0; width: 100%; padding: 24px; background: linear-gradient(transparent, #050505 30%); display: flex; justify-content: center; z-index: 10; }
+    .input-wrapper { width: 100%; max-width: 900px; display: flex; gap: 12px; align-items: flex-end; background: rgba(15,15,15,0.9); padding: 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(14px); }
+    
+    .model-selector-container { position: relative; min-width: 160px; }
     .custom-select-trigger {
       background: rgba(30, 30, 30, 0.8);
       border: 1px solid rgba(255,255,255,0.1);
@@ -159,18 +192,11 @@
       padding: 0 16px;
       border-radius: 12px;
       font-size: 13px;
-      font-weight: 500;
       cursor: pointer;
       height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.2s;
-    }
-
-    .custom-select-trigger:hover {
-      border-color: rgba(255,255,255,0.2);
-      background: rgba(40, 40, 40, 0.8);
     }
 
     .custom-options {
@@ -185,153 +211,37 @@
       display: none;
       flex-direction: column;
       gap: 2px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       z-index: 1000;
-      max-height: 400px;
-      overflow-y: auto;
     }
-
-    .custom-options.show {
-      display: flex;
-      animation: slideUp 0.2s ease;
-    }
-
-    .option-group-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #666;
-      padding: 8px 12px 4px 12px;
-      font-weight: 700;
-    }
-
-    .custom-option {
-      padding: 10px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      color: #9CA3AF;
-      transition: all 0.2s;
-    }
-
-    .custom-option:hover {
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-    }
-
-    /* Selection highlight */
-    .custom-option.selected {
-      background: rgba(255, 255, 255, 0.1);
-      color: #FFFFFF;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .custom-options.show { display: flex; }
+    .custom-option { padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; color: #9CA3AF; }
+    .custom-option:hover, .custom-option.selected { background: rgba(255,255,255,0.1); color: #fff; }
 
     textarea { flex: 1; resize: none; background: transparent; border: none; color: #E5E7EB; padding: 12px; outline: none; font-size: 14px; max-height: 160px; min-height: 44px; }
-    button#send-btn { background: #FFFFFF; border: none; color: #000000; padding: 0 20px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; height: 44px; flex-shrink: 0; }
+    button#send-btn { background: #FFFFFF; border: none; color: #000000; padding: 0 20px; border-radius: 12px; cursor: pointer; font-weight: 600; height: 44px; }
     button#send-btn:disabled { opacity: 0.5; }
 
-    /* Dashboard Styles */
-    .dashboard {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 80px;
-      text-align: center;
-      padding: 0 20px;
-      animation: fadeIn 0.8s ease;
-    }
-
-    .dash-logo {
-      width: 64px;
-      height: 64px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-
-    .dash-logo svg {
-      width: 32px;
-      height: 32px;
-      color: #fff;
-    }
-
-    .dash-title {
-      font-size: 32px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 12px;
-      letter-spacing: -0.5px;
-    }
-
-    .dash-subtitle {
-      font-size: 16px;
-      color: #9CA3AF;
-      max-width: 450px;
-      line-height: 1.6;
-      margin-bottom: 40px;
-    }
-
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      max-width: 600px;
-      width: 100%;
-    }
-
-    .action-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 20px;
-      border-radius: 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-    }
-
-    .action-card:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.15);
-      transform: translateY(-2px);
-    }
-
-    .action-icon {
-      margin-bottom: 12px;
-      color: #FFFFFF;
-    }
-
-    .action-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-
-    .action-desc {
-      font-size: 12px;
-      color: #6B7280;
-      line-height: 1.4;
-    }
+    /* Dashboard */
+    .dashboard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 80px; text-align: center; padding: 0 20px; }
+    .dash-title { font-size: 32px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+    .dash-subtitle { font-size: 16px; color: #9CA3AF; max-width: 450px; margin-bottom: 40px; }
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    ::-webkit-scrollbar { width: 6px; } 
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+    @media (max-width: 768px) {
+      #sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000; width: 280px; }
+      body.sidebar-hidden #sidebar { margin-left: -280px; }
+      .input-wrapper { flex-direction: column; align-items: stretch; }
+      .model-selector-container { width: 100%; }
+    }
   </style>
 </head>
 <body onclick="closeDropdowns(event)">
   <aside id="sidebar">
     <div class="sidebar-header">
       <button class="new-chat-btn" onclick="createNewChat()">
-        <span>+</span> New Chat
+        <span>New Chat</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       </button>
     </div>
     <div id="chat-list"></div>
@@ -339,37 +249,27 @@
 
   <main>
     <header>
-      <button class="toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="9" y1="3" x2="9" y2="21"></line>
-        </svg>
+      <button class="toggle-sidebar" onclick="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
       </button>
       <div><span>INDRA</span>.Dev</div>
     </header>
 
-    <div id="chat">
-      <!-- Initial Dashboard State -->
-    </div>
+    <div id="chat"></div>
 
     <div class="input-area">
       <div class="input-wrapper">
         <div class="model-selector-container">
           <div class="custom-select-trigger" onclick="toggleDropdown(event)">
             <span id="selected-model-text">Llama 3.1 70B</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="custom-options" id="model-options">
-            <div class="option-group-label">Meta Llama</div>
             <div class="custom-option selected" data-value="meta/llama-3.1-70b-instruct" data-name="Llama 3.1 70B">Llama 3.1 70B</div>
             <div class="custom-option" data-value="meta/llama-3.1-405b-instruct" data-name="Llama 3.1 405B">Llama 3.1 405B</div>
-            <div class="custom-option" data-value="meta/llama-3.1-8b-instruct" data-name="Llama 3.1 8B">Llama 3.1 8B</div>
-            
-            <div class="option-group-label">Google</div>
             <div class="custom-option" data-value="google/gemma-2-27b-it" data-name="Gemma 2 27B">Gemma 2 27B</div>
           </div>
         </div>
-        
         <textarea id="input" rows="1" placeholder="Ask INDRA anything..."></textarea>
         <button id="send-btn" onclick="sendMessage()">Send</button>
       </div>
@@ -389,81 +289,21 @@
     let selectedModel = "meta/llama-3.1-70b-instruct";
     let chats = JSON.parse(localStorage.getItem('indra_chats') || '[]');
 
-    const DASHBOARD_HTML = `
-      <div class="dashboard">
-        <div class="dash-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 17L12 22L22 17" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <h1 class="dash-title">Experience Pure Intelligence</h1>
-        <p class="dash-subtitle">INDRA.Dev is your high-performance environment for coding, research, and creative problem solving.</p>
-        
-        <div class="quick-actions">
-          <div class="action-card" onclick="setQuickInput('Explain the concept of reactive programming with examples.')">
-            <div class="action-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-            </div>
-            <div class="action-label">Deep Learning</div>
-            <div class="action-desc">Explore complex technical concepts in detail.</div>
-          </div>
-          <div class="action-card" onclick="setQuickInput('Write a clean, documented Python function for a binary search tree.')">
-            <div class="action-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <div class="action-label">Optimized Coding</div>
-            <div class="action-desc">Generate robust, production-ready code blocks.</div>
-          </div>
-          <div class="action-card" onclick="setQuickInput('Draft a professional email proposing a new technical architecture.')">
-            <div class="action-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </div>
-            <div class="action-label">Creative Drafts</div>
-            <div class="action-desc">Draft emails, reports, and architecture docs.</div>
-          </div>
-          <div class="action-card" onclick="setQuickInput('Perform a quick security audit on this piece of JavaScript code.')">
-            <div class="action-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div class="action-label">Code Review</div>
-            <div class="action-desc">Find vulnerabilities and optimize performance.</div>
-          </div>
-        </div>
-      </div>
-    `;
+    const DASHBOARD_HTML = `<div class="dashboard"><h1 class="dash-title">Experience Intelligence</h1><p class="dash-subtitle">High-performance AI for research and development.</p></div>`;
 
-    function setQuickInput(text) {
-      input.value = text;
-      autoResize();
-      input.focus();
-    }
+    function toggleDropdown(e) { e.stopPropagation(); modelOptions.classList.toggle('show'); }
+    function closeDropdowns() { modelOptions.classList.remove('show'); }
 
-    function toggleDropdown(e) {
-      e.stopPropagation();
-      modelOptions.classList.toggle('show');
-    }
-
-    function closeDropdowns(e) {
-      modelOptions.classList.remove('show');
-    }
-
-    document.querySelectorAll('.custom-option').forEach(option => {
-      option.addEventListener('click', (e) => {
-        const val = option.getAttribute('data-value');
-        const name = option.getAttribute('data-name');
-        selectedModel = val;
-        selectedModelText.textContent = name;
-        document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        modelOptions.classList.remove('show');
-      });
+    document.querySelectorAll('.custom-option').forEach(opt => {
+      opt.onclick = () => {
+        selectedModel = opt.dataset.value;
+        selectedModelText.textContent = opt.dataset.name;
+        document.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      };
     });
 
-    function toggleSidebar() {
-      document.body.classList.toggle('sidebar-hidden');
-    }
+    function toggleSidebar() { document.body.classList.toggle('sidebar-hidden'); }
 
     function saveChats() {
       localStorage.setItem('indra_chats', JSON.stringify(chats));
@@ -472,13 +312,7 @@
 
     function createNewChat() {
       const id = Date.now().toString();
-      const newChat = {
-        id: id,
-        title: 'New Conversation',
-        messages: [],
-        timestamp: id
-      };
-      chats.unshift(newChat);
+      chats.unshift({ id, title: 'New Conversation', messages: [] });
       currentChatId = id;
       saveChats();
       loadChat(id);
@@ -492,26 +326,10 @@
         chatContainer.innerHTML = DASHBOARD_HTML;
       } else {
         chat.messages.forEach(msg => {
-          if (msg.type === 'code') {
-            renderCodeMessage(msg.content, msg.label, msg.lang);
-          } else {
-            renderChatMessage(msg.content, msg.role);
-          }
+          renderChatMessage(msg.content, msg.role);
         });
       }
       renderChatList();
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function deleteChat(e, id) {
-      e.stopPropagation();
-      chats = chats.filter(c => c.id !== id);
-      if (currentChatId === id) {
-        currentChatId = chats.length > 0 ? chats[0].id : null;
-      }
-      saveChats();
-      if (currentChatId) loadChat(currentChatId);
-      else chatContainer.innerHTML = DASHBOARD_HTML;
     }
 
     function renderChatList() {
@@ -519,143 +337,157 @@
       chats.forEach(chat => {
         const item = document.createElement('div');
         item.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
+        
+        const displayTitle = chat.title;
+        
+        item.innerHTML = `
+          <span>${displayTitle}</span>
+          <span onclick="deleteChat(event, '${chat.id}')" class="delete-chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+          </span>`;
         item.onclick = () => loadChat(chat.id);
-        const title = document.createElement('span');
-        title.textContent = chat.title;
-        const delBtn = document.createElement('span');
-        delBtn.className = 'delete-chat';
-        delBtn.innerHTML = '&times;';
-        delBtn.onclick = (e) => deleteChat(e, chat.id);
-        item.appendChild(title);
-        item.appendChild(delBtn);
         chatListContainer.appendChild(item);
       });
     }
 
+    function deleteChat(e, id) {
+      e.stopPropagation();
+      chats = chats.filter(c => c.id !== id);
+      if (currentChatId === id) currentChatId = chats[0]?.id || null;
+      saveChats();
+      loadChat(currentChatId);
+    }
+
     async function sendMessage() {
       const text = input.value.trim();
-      if (!text) return;
+      if (!text || sendBtn.disabled) return;
       if (!currentChatId) createNewChat();
-      const dashboard = document.querySelector('.dashboard');
-      if (dashboard) dashboard.remove();
+
       const chatIdx = chats.findIndex(c => c.id === currentChatId);
-      if (chats[chatIdx].messages.length === 0) {
-        chats[chatIdx].title = text.substring(0, 30) + (text.length > 30 ? '...' : '');
-      }
+      if (chats[chatIdx].messages.length === 0) chats[chatIdx].title = text.slice(0, 30);
+      
       chats[chatIdx].messages.push({ role: 'user', content: text });
       renderChatMessage(text, 'user');
       input.value = '';
-      autoResize();
+      input.style.height = 'auto';
       sendBtn.disabled = true;
-      const aiMessagePlaceholder = renderChatMessage("Thinking...", 'ai');
+
+      const aiMsgContainer = renderChatMessage("Thinking...", 'ai');
+
       try {
+        const validMessages = chats[chatIdx].messages
+          .filter(m => m.role === 'user' || m.role === 'assistant')
+          .map(m => ({ role: m.role, content: m.content }));
+
         const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            model: selectedModel, 
-            messages: chats[chatIdx].messages.map(m => ({role: m.role, content: m.content})), 
-            temperature: 0.7, 
-            max_tokens: 1500 
-          })
+          body: JSON.stringify({ model: selectedModel, messages: validMessages })
         });
+        
         const data = await response.json();
-        const fullText = data.reply || data.choices?.[0]?.message?.content || "No response.";
-        aiMessagePlaceholder.remove();
-        processAIResponse(fullText, chatIdx);
+        const reply = data.reply || "Error: Invalid response format.";
+        
+        aiMsgContainer.innerHTML = '';
+        processAIResponse(reply, aiMsgContainer);
+        
+        chats[chatIdx].messages.push({ role: 'assistant', content: reply });
         saveChats();
-      } catch (error) {
-        aiMessagePlaceholder.textContent = "Error connecting to API.";
+      } catch (e) {
+        aiMsgContainer.textContent = "Connection failed.";
       } finally {
         sendBtn.disabled = false;
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
     }
 
-    function processAIResponse(text, chatIdx) {
-      const codeRegex = /```(html|css|javascript|js|python|py)\s*([\s\S]*?)\s*```/g;
-      let lastIndex = 0;
-      let match;
-
-      while ((match = codeRegex.exec(text)) !== null) {
-        const prevText = text.substring(lastIndex, match.index).trim();
-        if (prevText) {
-          chats[chatIdx].messages.push({ role: 'ai', content: prevText });
-          renderChatMessage(prevText, 'ai');
+    function processAIResponse(text, container) {
+      const parts = text.split(/```/);
+      parts.forEach((part, i) => {
+        if (i % 2 === 0) {
+          if (part.trim()) {
+            const textEl = document.createElement('div');
+            textEl.className = 'text-content';
+            
+            const boldRegex = /\*\*(.*?)\*\*/g;
+            let lastIdx = 0;
+            let match;
+            
+            while ((match = boldRegex.exec(part)) !== null) {
+              if (match.index > lastIdx) {
+                textEl.appendChild(document.createTextNode(part.substring(lastIdx, match.index)));
+              }
+              const b = document.createElement('span');
+              b.className = 'bold-text';
+              b.textContent = match[1];
+              textEl.appendChild(b);
+              lastIdx = boldRegex.lastIndex;
+            }
+            if (lastIdx < part.length) {
+              textEl.appendChild(document.createTextNode(part.substring(lastIdx)));
+            }
+            container.appendChild(textEl);
+          }
+        } else {
+          const lines = part.split('\n');
+          const lang = lines[0].trim();
+          const code = lines.slice(1).join('\n').trim();
+          
+          const codeContainer = document.createElement('div');
+          codeContainer.className = 'code-block-container';
+          
+          const header = document.createElement('div');
+          header.className = 'code-header';
+          header.innerHTML = `<span class="code-label">${lang || 'CODE'}</span>`;
+          
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.textContent = 'Copy';
+          copyBtn.onclick = function() {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand('copy');
+              this.textContent = 'Copied!';
+            } catch (err) {
+              this.textContent = 'Failed';
+            }
+            document.body.removeChild(textarea);
+            setTimeout(() => this.textContent = 'Copy', 2000);
+          };
+          header.appendChild(copyBtn);
+          
+          const pre = document.createElement('pre');
+          pre.className = 'code-content';
+          const codeEl = document.createElement('code');
+          codeEl.innerText = code;
+          pre.appendChild(codeEl);
+          
+          codeContainer.appendChild(header);
+          codeContainer.appendChild(pre);
+          container.appendChild(codeContainer);
         }
-
-        let lang = match[1].toLowerCase();
-        if (lang === 'js') lang = 'javascript';
-        if (lang === 'py') lang = 'python';
-        
-        const codeContent = match[2].trim();
-        
-        chats[chatIdx].messages.push({ 
-          type: 'code', 
-          content: codeContent, 
-          label: lang.toUpperCase(), 
-          lang: lang 
-        });
-        renderCodeMessage(codeContent, lang.toUpperCase(), lang);
-
-        lastIndex = codeRegex.lastIndex;
-      }
-
-      const remainingText = text.substring(lastIndex).trim();
-      if (remainingText) {
-        chats[chatIdx].messages.push({ role: 'ai', content: remainingText });
-        renderChatMessage(remainingText, 'ai');
-      }
+      });
     }
 
-    function formatText(text) {
-      const escaped = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-      return escaped.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    }
-
-    function renderChatMessage(text, type) {
+    function renderChatMessage(content, role) {
       const msg = document.createElement('div');
-      msg.className = `message ${type}`;
-      msg.innerHTML = formatText(text);
-      chatContainer.appendChild(msg);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      return msg;
-    }
-
-    function renderCodeMessage(code, label, type) {
-      const msg = document.createElement('div');
-      msg.className = `message ai code-block type-${type}`;
-      const codeHeader = document.createElement('div');
-      codeHeader.className = 'code-header';
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'code-label';
-      labelSpan.textContent = label;
-      const copyBtn = document.createElement('button');
-      copyBtn.className = 'copy-btn';
-      copyBtn.textContent = 'Copy';
-      copyBtn.onclick = function() {
-        const temp = document.createElement('textarea');
-        temp.value = code;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        document.body.removeChild(temp);
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = 'Copy', 2000);
-      };
-      codeHeader.appendChild(labelSpan);
-      codeHeader.appendChild(copyBtn);
-      const codePre = document.createElement('pre');
-      codePre.textContent = code;
-      codePre.style.whiteSpace = 'pre-wrap';
-      codePre.style.wordBreak = 'break-all';
-      msg.appendChild(codeHeader);
-      msg.appendChild(codePre);
+      msg.className = `message ${role}`;
+      
+      if (role === 'assistant' && content !== "Thinking...") {
+        processAIResponse(content, msg);
+      } else {
+        msg.textContent = content;
+      }
+      
       chatContainer.appendChild(msg);
       chatContainer.scrollTop = chatContainer.scrollHeight;
       return msg;
@@ -663,10 +495,11 @@
 
     function autoResize() {
       input.style.height = 'auto';
-      input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+      input.style.height = input.scrollHeight + 'px';
     }
-
-    input.addEventListener('input', autoResize);
+    
+    input.oninput = autoResize;
+    
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -674,13 +507,8 @@
       }
     });
 
-    if (chats.length > 0) {
-      loadChat(chats[0].id);
-    } else {
-      renderChatList();
-      chatContainer.innerHTML = DASHBOARD_HTML;
-    }
-    input.focus();
+    if (chats.length > 0) loadChat(chats[0].id);
+    else chatContainer.innerHTML = DASHBOARD_HTML;
   </script>
 </body>
 </html>
