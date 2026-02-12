@@ -472,6 +472,8 @@
       sendBtn.disabled = true;
 
       const aiMsgContainer = renderChatMessage("Thinking...", 'ai');
+      // Force scroll to bottom to ensure "Thinking..." is visible
+      scrollToBottom();
 
       try {
         const validMessages = chats[chatIdx].messages
@@ -492,11 +494,12 @@
         
         chats[chatIdx].messages.push({ role: 'assistant', content: reply });
         saveChats();
+        scrollToBottom();
       } catch (e) {
         aiMsgContainer.textContent = "Connection failed.";
       } finally {
         sendBtn.disabled = false;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        scrollToBottom();
       }
     }
 
@@ -584,8 +587,12 @@
       }
       
       chatContainer.appendChild(msg);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      scrollToBottom();
       return msg;
+    }
+
+    function scrollToBottom() {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     function autoResize() {
