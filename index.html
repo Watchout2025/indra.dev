@@ -6,22 +6,6 @@
   <title>INDRA.Dev</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    .think-container {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-bottom: 8px;
-  padding: 8px 10px;
-  background: rgba(255,200,0,0.06);
-  border-left: 3px solid #facc15;
-  border-radius: 6px;
-  color: #fcd34d;
-  display: none;
-}
-
-.message.ai.show-think .think-container {
-  display: block;
-}
-
     /* Global Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
     body { background: #000; color: #E5E7EB; height: 100vh; display: flex; overflow: hidden; }
@@ -490,114 +474,49 @@
     }
 
     async function sendMessage() {
-  const text = input.value.trim();
-  if (!text || sendBtn.disabled) return;
-
-  if (!currentChatId) {
-    const id = Date.now().toString();
-    chats.unshift({ id, title: 'New Conversation', messages: [] });
-    currentChatId = id;
-  }
-
-  const chatIdx = chats.findIndex(c => c.id === currentChatId);
-
-  if (chats[chatIdx].messages.length === 0) {
-    chats[chatIdx].title = text.slice(0, 30);
-  }
-
-  chats[chatIdx].messages.push({ role: 'user', content: text });
-  renderChatMessage(text, 'user');
-
-  input.value = '';
-  input.style.height = 'auto';
-  sendBtn.disabled = true;
-
-  // Create AI container
-  const msg = document.createElement('div');
-  msg.className = 'message ai';
-
-  const thinkDiv = document.createElement('div');
-  thinkDiv.className = 'think-container';
-
-  const textDiv = document.createElement('div');
-  textDiv.className = 'text-content';
-
-  msg.appendChild(thinkDiv);
-  msg.appendChild(textDiv);
-  chatContainer.appendChild(msg);
-  scrollToBottom();
-
-  let thinkBuffer = '';
-  let answerBuffer = '';
-  let inThink = false;
-
-  try {
-    const validMessages = chats[chatIdx].messages
-      .filter(m => m.role === 'user' || m.role === 'assistant')
-      .map(m => ({ role: m.role, content: m.content }));
-
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: selectedModel, messages: validMessages })
-    });
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split("\n");
-
-      for (const line of lines) {
-        if (!line.startsWith("data:")) continue;
-        if (line.includes("[DONE]")) break;
-
-        try {
-          const json = JSON.parse(line.replace("data:", ""));
-          const token = json.choices?.[0]?.delta?.content || '';
-
-          if (token.includes("<think>")) {
-            inThink = true;
-            continue;
-          }
-
-          if (token.includes("</think>")) {
-            inThink = false;
-            continue;
-          }
-
-          if (inThink) {
-            thinkBuffer += token;
-            thinkDiv.textContent = thinkBuffer;
-          } else {
-            answerBuffer += token;
-            textDiv.textContent = answerBuffer;
-          }
-
-          scrollToBottom();
-        } catch {}
-      }
+    const text = input.value.trim();
+    if (!text || sendBtn.disabled) return;
+    if (!currentChatId) {
+        const id = Date.now().toString();
+        chats.unshift({ id, title: 'New Conversation', messages: [] });
+        currentChatId = id;
     }
-
-    // Final render (code blocks etc)
-    textDiv.innerHTML = '';
-    processAIResponse(answerBuffer, textDiv);
-
-    chats[chatIdx].messages.push({ role: 'assistant', content: answerBuffer });
-    saveChats();
-
-  } catch (e) {
-    textDiv.textContent = "Connection failed.";
-  } finally {
-    sendBtn.disabled = false;
+    const chatIdx = chats.findIndex(c => c.id === currentChatId);
+    if (chats[chatIdx].messages.length === 0) {
+        const plainText = text.replace(/<[^>]*>/g, '');
+        chats[chatIdx].title = plainText.slice(0, 30);
+    }
+    chats[chatIdx].messages.push({ role: 'user', content: text });
+    renderChatMessage(text, 'user');
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+    const aiMsgContainer = renderChatMessage("Thinking...", 'ai');
+    // Force scroll to bottom to ensure "Thinking..." is visible
     scrollToBottom();
-  }
+    try {
+        const validMessages = chats[chatIdx].messages
+            .filter(m => m.role === 'user' || m.role === 'assistant')
+            .map(m => ({ role: m.role, content: m.content }));
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ model: selectedModel, messages: validMessages })
+        });
+        const data = await response.json();
+        const reply = data.reply || "Error: Invalid response format.";
+        aiMsgContainer.innerHTML = '';
+        processAIResponse(reply, aiMsgContainer);
+        chats[chatIdx].messages.push({ role: 'assistant', content: reply });
+        saveChats();
+        scrollToBottom();
+    } catch (e) {
+        aiMsgContainer.textContent = "Connection failed.";
+    } finally {
+        sendBtn.disabled = false;
+        scrollToBottom();
+    }
 }
-
     function processAIResponse(text, container) {
       const parts = text.split(/```/);
       parts.forEach((part, i) => {
