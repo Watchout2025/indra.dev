@@ -420,21 +420,25 @@
       if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
     }
 
-    function loadChat(id) {
-  currentChatId = id;
-  const chat = chats.find(c => c.id === id);
-  chatContainer.innerHTML = '';
-  if (!chat || chat.messages.length === 0) {
-    chatContainer.innerHTML = DASHBOARD_HTML;
+    function renderChatMessage(content, role) {
+  const msg = document.createElement('div');
+
+  // map both 'assistant' and 'ai' to same thing
+  const isAssistant = role === 'assistant' || role === 'ai';
+
+  msg.className = `message ${isAssistant ? 'ai' : 'user'}`;
+
+  if (isAssistant && content !== "Thinking...") {
+    processAIResponse(content, msg);
   } else {
-    chat.messages.forEach(m => {
-      const role = m.role === 'assistant' ? 'ai' : m.role; // map assistant -> ai
-      renderChatMessage(m.content, role);
-    });
+    msg.textContent = content;
   }
-  renderChatList();
-  if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
+
+  chatContainer.appendChild(msg);
+  scrollToBottom();
+  return msg;
 }
+
 
 
     function renderChatList() {
