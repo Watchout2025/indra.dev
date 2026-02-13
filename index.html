@@ -385,7 +385,7 @@
     let chats = JSON.parse(localStorage.getItem('indra_chats') || '[]');
 
     const DASHBOARD_HTML = `<div class="dashboard">
-    <img src="https://i.pinimg.com/originals/de/c7/9c/dec79cfad5bcf0efc449d92eef9db641.gif" style=" object-fit:cover; width: 30vw;">`;
+    <img src="https://i.pinimg.com/originals/de/c7/9c/dec79cfad5bcf0efc449d92eef9db641.gif" style=" object-fit:contain;">`;
 
     function toggleDropdown(e) { e.stopPropagation(); modelOptions.classList.toggle('show'); }
     function closeDropdowns() { modelOptions.classList.remove('show'); }
