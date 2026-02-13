@@ -467,9 +467,7 @@
       if (!currentChatId) createNewChat();
 
       const chatIdx = chats.findIndex(c => c.id === currentChatId);
-      if (chats[chatIdx].messages.length === 0) {
-        const messageText = text.replace(/<[^>]*>/g, ''); // remove HTML tags
-        chats[chatIdx].title = messageText.slice(0, 30) || 'Untitled';
+      if (chats[chatIdx].messages.length === 0) chats[chatIdx].title = text.slice(0, 30);
       
       chats[chatIdx].messages.push({ role: 'user', content: text });
       renderChatMessage(text, 'user');
