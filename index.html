@@ -382,6 +382,7 @@
         selectedModelText.textContent = opt.dataset.name;
         document.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
+        modelOptions.classList.remove('show'); // Close the dropdown
       };
     });
 
