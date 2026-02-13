@@ -407,11 +407,12 @@
       }
     }
 
-    function closeSidebarOnMobile() {
-      if (window.innerWidth <= 768 && document.body.classList.contains('sidebar-visible')) {
-        document.body.classList.remove('sidebar-visible');
-      }
-    }
+    function closeSidebarOnMobile(e) {
+  if (e.target.classList.contains('delete-chat')) return;
+  if (window.innerWidth <= 768 && document.body.classList.contains('sidebar-visible')) {
+    document.body.classList.remove('sidebar-visible');
+  }
+}
 
     function saveChats() {
       localStorage.setItem('indra_chats', JSON.stringify(chats));
