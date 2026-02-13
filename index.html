@@ -421,19 +421,21 @@
     }
 
     function loadChat(id) {
-      currentChatId = id;
-      const chat = chats.find(c => c.id === id);
-      chatContainer.innerHTML = '';
-      if (!chat || chat.messages.length === 0) {
-        chatContainer.innerHTML = DASHBOARD_HTML;
-      } else {
-        chat.messages.forEach(msg => {
-          renderChatMessage(msg.content, msg.role);
-        });
-      }
-      renderChatList();
-      if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
-    }
+  currentChatId = id;
+  const chat = chats.find(c => c.id === id);
+  chatContainer.innerHTML = '';
+  if (!chat || chat.messages.length === 0) {
+    chatContainer.innerHTML = DASHBOARD_HTML;
+  } else {
+    chat.messages.forEach(m => {
+      const role = m.role === 'assistant' ? 'ai' : m.role; // map assistant -> ai
+      renderChatMessage(m.content, role);
+    });
+  }
+  renderChatList();
+  if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
+}
+
 
     function renderChatList() {
       chatListContainer.innerHTML = '';
