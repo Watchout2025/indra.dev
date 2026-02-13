@@ -407,12 +407,11 @@
       }
     }
 
-    function closeSidebarOnMobile(e) {
-  if (e.target.classList.contains('delete-chat')) return;
-  if (window.innerWidth <= 768 && document.body.classList.contains('sidebar-visible')) {
-    document.body.classList.remove('sidebar-visible');
-  }
-}
+    function closeSidebarOnMobile() {
+      if (window.innerWidth <= 768 && document.body.classList.contains('sidebar-visible')) {
+        document.body.classList.remove('sidebar-visible');
+      }
+    }
 
     function saveChats() {
       localStorage.setItem('indra_chats', JSON.stringify(chats));
@@ -466,13 +465,12 @@
     }
 
     function deleteChat(e, id) {
-  e.preventDefault(); // Add this line
-  e.stopPropagation();
-  chats = chats.filter(c => c.id !== id);
-  if (currentChatId === id) currentChatId = chats[0]?.id || null;
-  saveChats();
-  loadChat(currentChatId);
-}
+      e.stopPropagation();
+      chats = chats.filter(c => c.id !== id);
+      if (currentChatId === id) currentChatId = chats[0]?.id || null;
+      saveChats();
+      loadChat(currentChatId);
+    }
 
     async function sendMessage() {
     const text = input.value.trim();
