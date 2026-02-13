@@ -465,12 +465,13 @@
     }
 
     function deleteChat(e, id) {
-      e.stopPropagation();
-      chats = chats.filter(c => c.id !== id);
-      if (currentChatId === id) currentChatId = chats[0]?.id || null;
-      saveChats();
-      loadChat(currentChatId);
-    }
+  e.preventDefault(); // Add this line
+  e.stopPropagation();
+  chats = chats.filter(c => c.id !== id);
+  if (currentChatId === id) currentChatId = chats[0]?.id || null;
+  saveChats();
+  loadChat(currentChatId);
+}
 
     async function sendMessage() {
     const text = input.value.trim();
