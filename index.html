@@ -476,6 +476,9 @@
     }
 
     async function sendMessage() {
+    if (chatContainer.innerHTML.includes('dashboard')) {
+        chatContainer.innerHTML = '';
+    }
     const text = input.value.trim();
     if (!text || sendBtn.disabled) return;
     if (!currentChatId) {
