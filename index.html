@@ -476,8 +476,9 @@
     }
 
     async function sendMessage() {
-    if (chatContainer.innerHTML.includes('dashboard')) {
-        chatContainer.innerHTML = '';
+    const dashboard = chatContainer.querySelector('.dashboard');
+    if (dashboard) {
+    dashboard.remove();
     }
     const text = input.value.trim();
     if (!text || sendBtn.disabled) return;
