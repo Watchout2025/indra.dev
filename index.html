@@ -464,14 +464,15 @@
     async function sendMessage() {
     const text = input.value.trim();
     if (!text || sendBtn.disabled) return;
-    if (!currentChatId) createNewChat();
+    if (!currentChatId) {
+        const id = Date.now().toString();
+        chats.unshift({ id, title: 'New Conversation', messages: [] });
+        currentChatId = id;
+    }
     const chatIdx = chats.findIndex(c => c.id === currentChatId);
     if (chats[chatIdx].messages.length === 0) {
-        // Extract the text from the HTML message
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const title = doc.body.textContent.trim().slice(0, 30);
-        chats[chatIdx].title = title;
+        const plainText = text.replace(/<[^>]*>/g, '');
+        chats[chatIdx].title = plainText.slice(0, 30);
     }
     chats[chatIdx].messages.push({ role: 'user', content: text });
     renderChatMessage(text, 'user');
@@ -504,7 +505,6 @@
         scrollToBottom();
     }
 }
-
     function processAIResponse(text, container) {
       const parts = text.split(/```/);
       parts.forEach((part, i) => {
