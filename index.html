@@ -382,7 +382,11 @@
     let selectedModel = "meta/llama-3.1-70b-instruct";
     let chats = JSON.parse(localStorage.getItem('indra_chats') || '[]');
 
-    const DASHBOARD_HTML = `<div class="dashboard"><h1 class="dash-title">Experience Intelligence</h1><p class="dash-subtitle">High-performance AI for research and development.</p></div>`;
+    const DASHBOARD_HTML = `<div class="dashboard"><h1 class="dash-title">Experience Intelligence</h1><img src="https://64.media.tumblr.com/2043909b79e92bec544a29ac0789e5cf/tumblr_p5nf3zK1Mp1qzt4vjo1_540.gifv" alt="dvdp:
+“180315
+”" style="
+    width: 30vw;
+"><p class="dash-subtitle">High-performance AI for research and development.</p></div>`;
 
     function toggleDropdown(e) { e.stopPropagation(); modelOptions.classList.toggle('show'); }
     function closeDropdowns() { modelOptions.classList.remove('show'); }
