@@ -465,6 +465,7 @@
   </main>
 
   <script>
+    
     const API_URL = "https://indradevapi.watchoutofficial2006.workers.dev";
     const chatContainer = document.getElementById('chat');
     const chatWrapper = document.getElementById('chat-wrapper');
@@ -473,7 +474,7 @@
     const modelOptions = document.getElementById('model-options');
     const selectedModelText = document.getElementById('selected-model-text');
     const chatListContainer = document.getElementById('chat-list');
-
+    let selectedImageBase64 = null;
     let currentChatId = null;
     let selectedModel = "meta/llama-3.1-70b-instruct";
     let chats = JSON.parse(localStorage.getItem('indra_chats') || '[]');
@@ -493,6 +494,25 @@
         modelOptions.classList.remove('show'); // Close the dropdown
       };
     });
+    function handleImageSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    selectedImageBase64 = reader.result;
+    document.getElementById('image-preview').src = reader.result;
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('image-preview-container').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImageAttachment() {
+  selectedImageBase64 = null;
+  document.getElementById('image-input').value = "";
+  document.getElementById('image-preview-container').classList.remove('show');
+}
 
     function toggleSidebar() {
       if (window.innerWidth <= 768) {
@@ -571,52 +591,89 @@
 
     async function sendMessage() {
     const dashboard = chatContainer.querySelector('.dashboard');
-    if (dashboard) {
-    dashboard.remove();
-    }
+    if (dashboard) dashboard.remove();
+
     const text = input.value.trim();
-    if (!text || sendBtn.disabled) return;
+    if ((!text && !selectedImageBase64) || sendBtn.disabled) return;
+
     if (!currentChatId) {
         const id = Date.now().toString();
         chats.unshift({ id, title: 'New Conversation', messages: [] });
         currentChatId = id;
     }
+
     const chatIdx = chats.findIndex(c => c.id === currentChatId);
-    if (chats[chatIdx].messages.length === 0) {
+
+    if (chats[chatIdx].messages.length === 0 && text) {
         const plainText = text.replace(/<[^>]*>/g, '');
         chats[chatIdx].title = plainText.slice(0, 30);
     }
-    chats[chatIdx].messages.push({ role: 'user', content: text });
-    renderChatMessage(text, 'user');
+
+    // 🔥 Model routing
+    let modelToUse = selectedModel;
+    if (selectedImageBase64) {
+        modelToUse = "moonshotai/kimi-k2.5"; // ya kimi-k3
+    }
+
+    // 🔥 Message format
+    const userMessage = selectedImageBase64
+        ? {
+            role: "user",
+            content: [
+                { type: "text", text: text || "Describe this image." },
+                {
+                    type: "image_url",
+                    image_url: { url: selectedImageBase64 }
+                }
+            ]
+        }
+        : {
+            role: "user",
+            content: text
+        };
+
+    chats[chatIdx].messages.push(userMessage);
+    renderChatMessage(text || "[Image]", 'user');
+
     input.value = '';
     input.style.height = 'auto';
     sendBtn.disabled = true;
+
     const aiMsgContainer = renderChatMessage("Thinking...", 'ai');
-    // Force scroll to bottom to ensure "Thinking..." is visible
     scrollToBottom();
+
     try {
         const validMessages = chats[chatIdx].messages
-            .filter(m => m.role === 'user' || m.role === 'assistant')
-            .map(m => ({ role: m.role, content: m.content }));
+            .filter(m => m.role === 'user' || m.role === 'assistant');
+
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model: selectedModel, messages: validMessages })
+            body: JSON.stringify({
+                model: modelToUse,
+                messages: validMessages
+            })
         });
+
         const data = await response.json();
         const reply = data.reply || "Error: Invalid response format.";
+
         aiMsgContainer.innerHTML = '';
         processAIResponse(reply, aiMsgContainer);
+
         chats[chatIdx].messages.push({ role: 'assistant', content: reply });
         saveChats();
         scrollToBottom();
+
     } catch (e) {
         aiMsgContainer.textContent = "Connection failed.";
     } finally {
         sendBtn.disabled = false;
         scrollToBottom();
+        clearImageAttachment(); // reset after send
     }
 }
+
     function processAIResponse(text, container) {
       const parts = text.split(/```/);
       parts.forEach((part, i) => {
