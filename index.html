@@ -546,19 +546,36 @@ function clearImageAttachment() {
     }
 
     function loadChat(id) {
-      currentChatId = id;
-      const chat = chats.find(c => c.id === id);
-      chatContainer.innerHTML = '';
-      if (!chat || chat.messages.length === 0) {
-        chatContainer.innerHTML = DASHBOARD_HTML;
-      } else {
-        chat.messages.forEach(msg => {
-          renderChatMessage(msg.content, msg.role);
-        });
+  currentChatId = id;
+  const chat = chats.find(c => c.id === id);
+  chatContainer.innerHTML = '';
+
+  if (!chat || chat.messages.length === 0) {
+    chatContainer.innerHTML = DASHBOARD_HTML;
+  } else {
+    chat.messages.forEach(msg => {
+
+      // 🔥 Agar image message
+      if (Array.isArray(msg.content)) {
+        const textPart = msg.content.find(c => c.type === "text")?.text || "";
+        const imagePart = msg.content.find(c => c.type === "image_url")?.image_url?.url;
+
+        renderChatMessage(textPart, msg.role, imagePart);
+      } 
+      // Normal text
+      else {
+        renderChatMessage(msg.content, msg.role);
       }
-      renderChatList();
-      if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
-    }
+
+    });
+  }
+
+  renderChatList();
+  if (window.innerWidth <= 768) {
+    document.body.classList.remove('sidebar-visible');
+  }
+}
+
 
     function renderChatList() {
       chatListContainer.innerHTML = '';
