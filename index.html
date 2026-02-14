@@ -595,7 +595,11 @@ function clearImageAttachment() {
               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
             </svg>
           </span>`;
-        item.onclick = () => loadChat(chat.id);
+        item.onclick = (e) => {
+          e.stopPropagation();   // 🔥 yahin event rukega
+          loadChat(chat.id);
+        };
+
         chatListContainer.appendChild(item);
       });
     }
