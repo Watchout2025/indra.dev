@@ -402,7 +402,7 @@
   </style>
 </head>
 <body onclick="closeDropdowns(event)">
-  <aside id="sidebar">
+  <aside id="sidebar" onclick="event.stopPropagation()">
     <div class="sidebar-header">
       <button class="new-chat-btn" onclick="createNewChat()">
         <span>New Chat</span>
