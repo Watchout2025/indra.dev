@@ -402,7 +402,7 @@
   </style>
 </head>
 <body onclick="closeDropdowns(event)">
-  <aside id="sidebar">
+  <aside id="sidebar" onclick="event.stopPropagation()">
     <div class="sidebar-header">
       <button class="new-chat-btn" onclick="createNewChat()">
         <span>New Chat</span>
@@ -542,23 +542,41 @@ function clearImageAttachment() {
       currentChatId = id;
       saveChats();
       loadChat(id);
+      sendBtn.disabled = false;
       if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
     }
 
     function loadChat(id) {
-      currentChatId = id;
-      const chat = chats.find(c => c.id === id);
-      chatContainer.innerHTML = '';
-      if (!chat || chat.messages.length === 0) {
-        chatContainer.innerHTML = DASHBOARD_HTML;
-      } else {
-        chat.messages.forEach(msg => {
-          renderChatMessage(msg.content, msg.role);
-        });
+  currentChatId = id;
+  const chat = chats.find(c => c.id === id);
+  chatContainer.innerHTML = '';
+
+  if (!chat || chat.messages.length === 0) {
+    chatContainer.innerHTML = DASHBOARD_HTML;
+  } else {
+    chat.messages.forEach(msg => {
+
+      // 🔥 Agar image message
+      if (Array.isArray(msg.content)) {
+        const textPart = msg.content.find(c => c.type === "text")?.text || "";
+        const imagePart = msg.content.find(c => c.type === "image_url")?.image_url?.url;
+
+        renderChatMessage(textPart, msg.role, imagePart);
+      } 
+      // Normal text
+      else {
+        renderChatMessage(msg.content, msg.role);
       }
-      renderChatList();
-      if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
-    }
+
+    });
+  }
+
+  renderChatList();
+  if (window.innerWidth <= 768) {
+    document.body.classList.remove('sidebar-visible');
+  }
+}
+
 
     function renderChatList() {
       chatListContainer.innerHTML = '';
@@ -577,7 +595,11 @@ function clearImageAttachment() {
               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
             </svg>
           </span>`;
-        item.onclick = () => loadChat(chat.id);
+        item.onclick = (e) => {
+          e.stopPropagation();   // 🔥 yahin event rukega
+          loadChat(chat.id);
+        };
+
         chatListContainer.appendChild(item);
       });
     }
@@ -646,8 +668,23 @@ function clearImageAttachment() {
     scrollToBottom();
 
     try {
-        const validMessages = chats[chatIdx].messages
-            .filter(m => m.role === 'user' || m.role === 'assistant');
+        const validMessages = chats[chatIdx].messages.map((m, idx) => {
+
+          // last message = full (image allowed)
+          if (idx === chats[chatIdx].messages.length - 1) {
+            return m;
+          }
+
+          // old image messages → only text
+          if (Array.isArray(m.content)) {
+            const textPart = m.content.find(c => c.type === "text")?.text || "";
+            return { role: m.role, content: textPart };
+          }
+
+          return m;
+        });
+
+
 
         const response = await fetch(API_URL, {
             method: "POST",
