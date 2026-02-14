@@ -542,6 +542,7 @@ function clearImageAttachment() {
       currentChatId = id;
       saveChats();
       loadChat(id);
+      sendBtn.disabled = false;
       if (window.innerWidth <= 768) document.body.classList.remove('sidebar-visible');
     }
 
