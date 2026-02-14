@@ -634,7 +634,9 @@ function clearImageAttachment() {
         };
 
     chats[chatIdx].messages.push(userMessage);
-    renderChatMessage(text || "[Image]", 'user');
+    renderChatMessage(text, 'user', selectedImageBase64);
+    clearImageAttachment(); // yahin pe
+
 
     input.value = '';
     input.style.height = 'auto';
@@ -748,20 +750,35 @@ function clearImageAttachment() {
       });
     }
 
-    function renderChatMessage(content, role) {
-      const msg = document.createElement('div');
-      msg.className = `message ${role}`;
-      
-      if (role === 'assistant' && content !== "Thinking...") {
-        processAIResponse(content, msg);
-      } else {
-        msg.textContent = content;
-      }
-      
-      chatContainer.appendChild(msg);
-      scrollToBottom();
-      return msg;
-    }
+    function renderChatMessage(content, role, image = null) {
+  const msg = document.createElement('div');
+  msg.className = `message ${role}`;
+
+  // Agar image hai (user side)
+  if (image) {
+    const img = document.createElement('img');
+    img.src = image;
+    img.style.maxWidth = "260px";
+    img.style.borderRadius = "12px";
+    img.style.display = "block";
+    img.style.marginBottom = content ? "8px" : "0";
+    msg.appendChild(img);
+  }
+
+  // Text handling
+  if (role === 'assistant' && content !== "Thinking...") {
+    processAIResponse(content, msg);
+  } else if (content) {
+    const textEl = document.createElement('div');
+    textEl.textContent = content;
+    msg.appendChild(textEl);
+  }
+
+  chatContainer.appendChild(msg);
+  scrollToBottom();
+  return msg;
+}
+
 
     function scrollToBottom() {
       chatWrapper.scrollTop = chatWrapper.scrollHeight;
