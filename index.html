@@ -664,7 +664,17 @@ function clearImageAttachment() {
 
     try {
         const validMessages = chats[chatIdx].messages
-            .filter(m => m.role === 'user' || m.role === 'assistant');
+          .filter(m => m.role === 'user' || m.role === 'assistant')
+          .map(m => {
+            // Agar content array hai (image message)
+            if (Array.isArray(m.content)) {
+              // Sirf text part nikaalo
+              const textPart = m.content.find(c => c.type === "text")?.text;
+              return { role: m.role, content: textPart || "" };
+            }
+            return m;
+          });
+
 
         const response = await fetch(API_URL, {
             method: "POST",
